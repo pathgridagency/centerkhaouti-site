@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Center Khaouti — Kinésithérapie & Physiothérapie | Bruxelles</title>
+<meta name="description" content="Center Khaouti, votre centre de kinésithérapie et physiothérapie à Bruxelles. Prenez rendez-vous en ligne. Spécialités : sportive, post-opératoire, pédiatrique, neurologique.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --teal:#0fa99b;--teal-d:#0d8f83;--teal-g:#12c4b5;
+  --night:#1d3331;--night2:#0a2320;
+  --orange:#f2794f;--sage:#e7eae6;--wash:#e8f5f3;
+  --text:#2c3a3a;--muted:#7c8987;--border:#d5e0dd;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito Sans',sans-serif;color:var(--text);background:#fff;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+ul{list-style:none;}
+button{cursor:pointer;font-family:inherit;}
+
+/* ── ANIMATIONS ── */
+.fade-up{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* ── HELPERS ── */
+.section-tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;}
+.section-tag::before{content:'';width:20px;height:3px;background:var(--teal);border-radius:2px;}
+.section-tag.light{color:var(--teal-g);}
+.section-tag.light::before{background:var(--teal-g);}
+h2.section-title{font-family:'Nunito',sans-serif;font-size:clamp(26px,4vw,42px);font-weight:900;color:var(--night);line-height:1.1;margin-bottom:14px;}
+h2.section-title.white{color:#fff;}
+p.section-sub{font-size:16px;color:var(--muted);max-width:560px;line-height:1.7;}
+p.section-sub.white{color:rgba(255,255,255,.6);}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:12px;font-weight:800;font-size:15px;letter-spacing:.01em;border:none;transition:background .2s,transform .2s,border-color .2s;white-space:nowrap;cursor:pointer;}
+.btn-lg{padding:18px 38px;font-size:16px;border-radius:14px;}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-teal:hover{background:var(--teal-d);transform:translateY(-2px);}
+.btn-wa{background:#25D366;color:#fff;}
+.btn-wa:hover{background:#1db954;transform:translateY(-2px);}
+.btn-phone{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.2);}
+.btn-phone:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5);}
+.btn-outline-white{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.28);}
+.btn-outline-white:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.6);}
+.btn-outline-teal{background:transparent;color:var(--teal);border:2px solid var(--teal);}
+.btn-outline-teal:hover{background:var(--teal);color:#fff;}
+.btn-night{background:var(--night);color:#fff;border:1.5px solid rgba(255,255,255,.12);}
+.btn-night:hover{background:#0a1e1d;transform:translateY(-2px);}
+/* icon sizing inside buttons */
+.btn [data-lucide]{width:18px;height:18px;flex-shrink:0;}
+.btn-lg [data-lucide]{width:20px;height:20px;}
+/* standalone icon helpers */
+.ic{width:18px;height:18px;flex-shrink:0;}
+.ic-sm{width:15px;height:15px;}
+.ic-lg{width:22px;height:22px;}
+/* WhatsApp SVG icon */
+.ic-wa{width:20px;height:20px;flex-shrink:0;}
+
+/* ── NAVBAR ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;transition:background .3s,box-shadow .3s;}
+#nav.solid{background:var(--night);box-shadow:0 4px 30px rgba(0,0,0,.25);}
+.nav-logo{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.nav-logo-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;color:#fff;line-height:1.1;}
+.nav-logo-sub{font-size:10px;color:var(--teal-g);font-weight:700;letter-spacing:.05em;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links a{color:rgba(255,255,255,.75);font-size:13px;font-weight:700;padding:8px 13px;border-radius:8px;transition:color .2s,background .2s;}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.1);}
+.nav-links a.cta{background:var(--teal);color:#fff;padding:9px 18px;border-radius:9px;}
+.nav-links a.cta:hover{background:var(--teal-d);}
+.nav-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;}
+.nav-burger span{width:24px;height:2px;background:#fff;border-radius:2px;transition:transform .3s,opacity .3s;}
+
+/* ── MOBILE MENU ── */
+#mob-menu{position:fixed;inset:0;z-index:999;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);}
+#mob-menu.open{transform:translateX(0);}
+#mob-menu a{color:rgba(255,255,255,.8);font-size:24px;font-family:'Nunito',sans-serif;font-weight:800;padding:12px 40px;border-radius:12px;transition:color .2s,background .2s;}
+#mob-menu a:hover{color:#fff;background:rgba(255,255,255,.1);}
+.mob-close{position:absolute;top:22px;right:24px;background:none;border:none;color:#fff;font-size:28px;line-height:1;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:linear-gradient(140deg,rgba(29,51,49,.90) 0%,rgba(13,46,42,.85) 50%,rgba(10,35,32,.93) 100%),url('images/header.jpg') center 30%/cover no-repeat;display:flex;align-items:center;position:relative;overflow:hidden;padding:110px 48px 80px;}
+.hero-glow{position:absolute;right:-15%;top:-10%;width:80vw;max-width:900px;aspect-ratio:1;background:radial-gradient(circle,rgba(30,201,165,.16) 0%,transparent 65%);pointer-events:none;}
+.hero-mark{position:absolute;right:2%;bottom:-8%;opacity:.05;pointer-events:none;}
+.hero-inner{max-width:700px;position:relative;z-index:2;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(30,201,165,.14);border:1px solid rgba(30,201,165,.3);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:800;letter-spacing:.08em;color:var(--teal-g);text-transform:uppercase;margin-bottom:24px;}
+.hero h1{font-family:'Nunito',sans-serif;font-size:clamp(38px,6vw,70px);font-weight:900;color:#fff;line-height:1.05;margin-bottom:20px;}
+.hero h1 em{color:var(--teal-g);font-style:normal;}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,.62);line-height:1.75;max-width:520px;margin-bottom:36px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px;}
+.hero-proof{display:flex;flex-wrap:wrap;gap:18px;}
+.hero-proof-item{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.58);font-weight:600;}
+.hero-proof-dot{width:9px;height:9px;border-radius:50%;background:var(--teal-g);flex-shrink:0;}
+.scroll-cue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:5px;color:rgba(255,255,255,.3);font-size:10px;letter-spacing:.12em;text-transform:uppercase;}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);animation:pulseLine 2s ease-in-out infinite;}
+@keyframes pulseLine{0%,100%{opacity:.4;transform:scaleY(1);}50%{opacity:.9;transform:scaleY(.7);}}
+
+/* ── STATS ── */
+.stats{background:var(--teal);}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat{padding:30px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.2);}
+.stat:last-child{border-right:none;}
+.stat-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:38px;color:#fff;line-height:1;margin-bottom:4px;}
+.stat-lbl{font-size:11px;color:rgba(255,255,255,.75);font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+
+/* ── ABOUT ── */
+.about{padding:100px 48px;background:#fff;}
+.about-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.about-visual{position:relative;}
+.about-img{width:100%;aspect-ratio:4/5;border-radius:22px;background:linear-gradient(135deg,var(--wash),#c8e8e3);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+/* Drop a real clinic photo here: <img src="photos/active.jpg" style="width:100%;height:100%;object-fit:cover"> */
+.about-float{position:absolute;bottom:-18px;right:-18px;background:var(--night);border-radius:16px;padding:18px 22px;box-shadow:0 12px 40px rgba(0,0,0,.18);}
+.about-float-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:30px;color:var(--teal-g);line-height:1;}
+.about-float-lbl{font-size:11px;color:rgba(255,255,255,.65);font-weight:700;margin-top:2px;}
+.about-checks{display:flex;flex-direction:column;gap:13px;margin-top:26px;}
+.about-check{display:flex;align-items:flex-start;gap:11px;font-size:15px;color:var(--text);line-height:1.5;}
+.check-icon{width:22px;height:22px;border-radius:6px;background:var(--wash);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--teal);font-weight:900;font-size:12px;margin-top:1px;}
+
+/* ── SERVICES ── */
+.services{padding:100px 48px;background:var(--sage);}
+.services-inner{max-width:1100px;margin:0 auto;}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:52px;}
+.svc-card{background:#fff;border-radius:14px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.05);transition:transform .25s,box-shadow .25s,border-bottom-color .25s;border-bottom:3px solid transparent;}
+.svc-card:hover{transform:translateY(-6px);box-shadow:0 18px 50px rgba(20,40,38,.12);border-bottom-color:var(--teal);}
+.svc-icon{width:50px;height:50px;border-radius:13px;background:var(--wash);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;}
+.svc-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:var(--night);margin-bottom:7px;}
+.svc-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* ── TEAM ── */
+.equipe{padding:100px 48px;background:#fff;}
+.equipe-inner{max-width:1100px;margin:0 auto;}
+.equipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;margin-top:52px;}
+.team-card{border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);transition:transform .25s;}
+.team-card:hover{transform:translateY(-6px);}
+.team-photo{aspect-ratio:4/3;background:linear-gradient(135deg,var(--night),#2a5550);display:flex;align-items:center;justify-content:center;}
+/* Real photo: <img src="photos/adults.jpg" style="width:100%;height:100%;object-fit:cover"> */
+.team-avatar{width:86px;height:86px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:30px;color:#fff;}
+.team-info{padding:20px 22px;background:#fff;}
+.team-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:var(--night);}
+.team-title{font-size:12px;color:var(--teal);font-weight:800;margin:3px 0 10px;letter-spacing:.03em;}
+.team-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.team-tag{background:var(--wash);color:var(--teal-d);font-size:10px;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.04em;}
+
+/* ── GALLERY ── */
+.galerie{padding:100px 48px;background:var(--night);}
+.galerie-inner{max-width:1100px;margin:0 auto;}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:200px;gap:14px;margin-top:48px;}
+.g-item{border-radius:13px;overflow:hidden;position:relative;cursor:pointer;background:var(--night);}
+.g-item:first-child{grid-row:span 2;}
+.g-item:hover .g-overlay{opacity:1;}
+.g-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease;}
+.g-item:hover img{transform:scale(1.06);}
+.g-lbl-bar{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 13px;background:linear-gradient(to top,rgba(13,35,32,.8),transparent);font-size:10px;font-weight:800;color:rgba(255,255,255,.9);letter-spacing:.1em;text-transform:uppercase;}
+.g-overlay{position:absolute;inset:0;background:rgba(15,169,155,.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;}
+
+/* ── TESTIMONIALS ── */
+.temoignages{padding:100px 48px;background:var(--sage);}
+.temoignages-inner{max-width:1100px;margin:0 auto;text-align:center;}
+.temo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:52px;text-align:left;}
+.temo-card{background:#fff;border-radius:14px;padding:26px;box-shadow:0 2px 12px rgba(0,0,0,.05);position:relative;}
+.temo-card::before{content:'"';font-family:'Nunito',sans-serif;font-size:90px;color:var(--wash);font-weight:900;line-height:.7;position:absolute;top:14px;right:18px;}
+.stars{display:flex;gap:3px;margin-bottom:12px;}
+.star{color:#F5A623;width:16px;height:16px;}
+.temo-text{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:18px;position:relative;z-index:1;}
+.temo-author{display:flex;align-items:center;gap:11px;padding-top:14px;border-top:1px solid var(--border);}
+.temo-ava{width:38px;height:38px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;color:#fff;flex-shrink:0;}
+.temo-name{font-weight:800;font-size:14px;color:var(--night);}
+.temo-svc{font-size:12px;color:var(--muted);}
+
+/* ── HOURS & MAP ── */
+.localisation{padding:100px 48px;background:#fff;}
+.local-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+.hours-table{width:100%;border-collapse:collapse;margin-top:18px;}
+.hours-table tr{border-bottom:1px solid var(--border);}
+.hours-table tr:last-child{border-bottom:none;}
+.hours-table td{padding:12px 0;font-size:14px;}
+.hours-table .day{font-weight:800;color:var(--night);}
+.hours-table .time{text-align:right;color:var(--teal-d);font-weight:700;}
+.hours-table .off{text-align:right;color:var(--muted);font-style:italic;}
+.row-today{background:var(--wash);}
+.row-today td{color:var(--teal-d) !important;}
+.contact-items{display:flex;flex-direction:column;gap:12px;margin-top:24px;}
+.ci{display:flex;align-items:center;gap:11px;font-size:14px;color:var(--text);}
+.ci-icon{width:34px;height:34px;border-radius:9px;background:var(--wash);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+#map{width:100%;height:420px;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.1);}
+
+/* ── BOOKING ── */
+.rdv{padding:100px 48px;background:linear-gradient(140deg,var(--night) 0%,#0d2e2a 100%);}
+.rdv-inner{max-width:1100px;margin:0 auto;}
+.rdv-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:48px;}
+.rdv-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:34px;transition:background .2s;}
+.rdv-card:hover{background:rgba(255,255,255,.1);}
+.rdv-card-icon{font-size:34px;margin-bottom:14px;}
+.rdv-card-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;color:#fff;margin-bottom:7px;}
+.rdv-card-desc{font-size:14px;color:rgba(255,255,255,.58);line-height:1.65;margin-bottom:22px;}
+/* Form */
+.rdv-form{display:flex;flex-direction:column;gap:12px;}
+.rdv-form input,.rdv-form select,.rdv-form textarea{width:100%;padding:13px 15px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:10px;color:#fff;font-family:inherit;font-size:14px;outline:none;transition:border-color .2s;}
+.rdv-form input::placeholder,.rdv-form textarea::placeholder{color:rgba(255,255,255,.32);}
+.rdv-form input:focus,.rdv-form select:focus,.rdv-form textarea:focus{border-color:var(--teal);}
+.rdv-form select option{background:var(--night);color:#fff;}
+.rdv-form textarea{resize:vertical;min-height:90px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+/* Direct contact card */
+.direct-btns{display:flex;flex-direction:column;gap:11px;}
+.divider-line{border:none;border-top:1px solid rgba(255,255,255,.1);margin:18px 0;}
+.rdv-note{font-size:12px;color:rgba(255,255,255,.32);line-height:1.65;}
+
+/* ── FOOTER ── */
+footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24px;}
+.footer-inner{max-width:1100px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,.08);}
+.footer-brand-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;color:#fff;}
+.footer-brand-sub{font-size:11px;color:var(--teal-g);font-weight:700;margin-bottom:14px;letter-spacing:.06em;}
+.footer-brand-desc{font-size:13px;line-height:1.7;max-width:260px;}
+.footer-col-title{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:14px;}
+.footer-links{display:flex;flex-direction:column;gap:9px;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,.55);transition:color .2s;}
+.footer-links a:hover{color:var(--teal-g);}
+.footer-bottom{padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:12px;}
+.footer-legal{display:flex;gap:18px;}
+.footer-legal a{color:rgba(255,255,255,.35);transition:color .2s;}
+.footer-legal a:hover{color:rgba(255,255,255,.7);}
+
+/* ── FLOATING ── */
+.float-wa{position:fixed;bottom:26px;right:26px;z-index:500;width:54px;height:54px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.18);color:#fff;transition:transform .2s;animation:popIn .5s ease .7s both;}
+.float-wa:hover{transform:scale(1.08);}
+@keyframes popIn{from{opacity:0;transform:scale(.4);}to{opacity:1;transform:scale(1);}}
+#btt{position:fixed;bottom:92px;right:26px;z-index:500;width:40px;height:40px;border-radius:50%;background:var(--night);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:17px;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s,transform .2s;box-shadow:0 4px 14px rgba(0,0,0,.2);}
+#btt.show{opacity:1;pointer-events:auto;}
+#btt:hover{transform:scale(1.08);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  #nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .nav-burger{display:flex;}
+  .hero{padding:90px 20px 70px;}
+  .about-inner,.local-inner{grid-template-columns:1fr;gap:40px;}
+  .about-float{right:10px;bottom:10px;}
+  .rdv-grid{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:28px;}
+  .stats-inner{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  .hero{padding:80px 18px 60px;}
+  .hero h1{font-size:36px;}
+  .about,.services,.equipe,.galerie,.temoignages,.localisation,.rdv{padding:64px 18px;}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-auto-rows:160px;}
+  .g-item:first-child{grid-row:span 1;}
+  .footer-top{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .footer-bottom{flex-direction:column;text-align:center;}
+  .stat{padding:20px 12px;}
+  .stat-num{font-size:28px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#accueil" class="nav-logo">
+    <svg width="31" height="35" viewBox="0 0 222.44 252.01" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#f2794f" d="M161.33,22.39c8.25,37.79-46.58,50.81-56.21,13.35-8.25-37.79,46.58-50.81,56.21-13.35Z"/>
+      <path fill="#0fa99b" d="M25.12,18.89C9.98,21.13-3.01,41.59.61,57.74c3.1,13.84,17.16,19.05,33.16,30.08,54.82,37.78,76.98,105.59,87.94,139.12,3.39,10.37,7.62,25.39,10.09,25.07C143.5,179.9,80.83,23.57,25.12,18.89Z"/>
+      <path fill="#fff" d="M207.27,58.13c9.14,1.81,16.98,18.3,14.8,31.31-1.87,11.15-10.36,15.36-20.02,24.24-33.09,30.45-46.48,85.09-53.1,112.12-2.05,8.36-4.6,20.47-6.09,20.2-6.8-53.16,27.94-181.63,64.41-187.88Z"/>
+    </svg>
+    <div>
+      <div class="nav-logo-name">CENTER KHAOUTI</div>
+      <div class="nav-logo-sub">Kinésithérapie &amp; Physiothérapie</div>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#a-propos">À propos</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#equipe">Équipe</a></li>
+    <li><a href="#galerie">Galerie</a></li>
+    <li><a href="#localisation">Horaires</a></li>
+    <li><a href="https://wa.me/212XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20prendre%20un%20rendez-vous%20au%20Center%20Khaouti." target="_blank" class="cta" style="background:#25D366;display:inline-flex;align-items:center;gap:7px;"><svg style="width:14px;height:14px;flex-shrink:0;" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg> Prendre RDV</a></li>
+  </ul>
+  <button class="nav-burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div id="mob-menu">
+  <button class="mob-close" id="mob-close">✕</button>
+  <a href="#a-propos" class="mob-link">À propos</a>
+  <a href="#services" class="mob-link">Services</a>
+  <a href="#equipe" class="mob-link">Équipe</a>
+  <a href="#galerie" class="mob-link">Galerie</a>
+  <a href="#localisation" class="mob-link">Horaires</a>
+  <a href="https://wa.me/212XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20prendre%20un%20rendez-vous%20au%20Center%20Khaouti." target="_blank" class="mob-link" style="color:#25D366;">Prendre RDV</a>
+</div>
+
+<!-- HERO -->
+<section id="accueil" class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-mark">
+    <svg width="520" height="590" viewBox="0 0 222.44 252.01" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#f2794f" d="M161.33,22.39c8.25,37.79-46.58,50.81-56.21,13.35-8.25-37.79,46.58-50.81,56.21-13.35Z"/>
+      <path fill="#0fa99b" d="M25.12,18.89C9.98,21.13-3.01,41.59.61,57.74c3.1,13.84,17.16,19.05,33.16,30.08,54.82,37.78,76.98,105.59,87.94,139.12,3.39,10.37,7.62,25.39,10.09,25.07C143.5,179.9,80.83,23.57,25.12,18.89Z"/>
+      <path fill="#fff" d="M207.27,58.13c9.14,1.81,16.98,18.3,14.8,31.31-1.87,11.15-10.36,15.36-20.02,24.24-33.09,30.45-46.48,85.09-53.1,112.12-2.05,8.36-4.6,20.47-6.09,20.2-6.8-53.16,27.94-181.63,64.41-187.88Z"/>
+    </svg>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge"><i data-lucide="shield-check" style="width:13px;height:13px;"></i> Centre agréé · Temara, Maroc</div>
+    <h1>Votre santé,<br><em>notre priorité</em></h1>
+    <p class="hero-sub">Kinésithérapie et physiothérapie de qualité à Bruxelles. Des soins personnalisés pour votre récupération, votre performance et votre bien-être au quotidien.</p>
+    <div class="hero-btns">
+      <!-- UPDATE: replace 32XXXXXXXXX with real WhatsApp number -->
+      <a href="https://wa.me/212XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20prendre%20un%20rendez-vous%20au%20Center%20Khaouti." target="_blank" class="btn btn-wa btn-lg">
+        <svg class="ic-wa" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg>
+        WhatsApp — Réponse rapide
+      </a>
+      <!-- UPDATE: replace +3221234567 with real phone -->
+      <a href="tel:+212XXXXXXXXX" class="btn btn-phone btn-lg">
+        <i data-lucide="phone"></i> Appeler la clinique
+      </a>
+    </div>
+    <div class="hero-proof">
+      <div class="hero-proof-item"><div class="hero-proof-dot"></div>Kinésithérapeutes D.E. agréés</div>
+      <div class="hero-proof-item"><div class="hero-proof-dot"></div>Remboursement mutuelles</div>
+      <div class="hero-proof-item"><div class="hero-proof-dot"></div>Prise en charge rapide</div>
+    </div>
+  </div>
+  <div class="scroll-cue"><div class="scroll-line"></div><span>Défiler</span></div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat fade-up"><div class="stat-num">10+</div><div class="stat-lbl">Années d'expérience</div></div>
+    <div class="stat fade-up d1"><div class="stat-num">500+</div><div class="stat-lbl">Patients traités</div></div>
+    <div class="stat fade-up d2"><div class="stat-num">8</div><div class="stat-lbl">Spécialités</div></div>
+    <div class="stat fade-up d3"><div class="stat-num">98%</div><div class="stat-lbl">Taux de satisfaction</div></div>
+  </div>
+</div>
+
+<!-- À PROPOS -->
+<section id="a-propos" class="about">
+  <div class="about-inner">
+    <div class="about-visual fade-up">
+      <div class="about-img" style="padding:0;background:none;">
+        <img src="images/physiotherapy.jpg"
+             alt="Séance de physiothérapie au Center Khaouti"
+             style="width:100%;height:100%;object-fit:cover;border-radius:22px;">
+      </div>
+      <div class="about-float">
+        <div class="about-float-num">2014</div>
+        <div class="about-float-lbl">Fondé à Bruxelles</div>
+      </div>
+    </div>
+    <div class="fade-up d1">
+      <div class="section-tag">Ce que nous faisons</div>
+      <h2 class="section-title">Un centre dédié à votre récupération</h2>
+      <p class="section-sub">Au Center Khaouti, nous combinons expertise médicale et approche humaine pour vous offrir des soins kinésithérapeutiques de la plus haute qualité. Chaque patient bénéficie d'un programme entièrement personnalisé.</p>
+      <div class="about-checks">
+        <div class="about-check"><div class="check-icon"><i data-lucide="check" style="width:13px;height:13px;stroke-width:3;"></i></div><span>Bilan initial complet et programme de soins sur mesure</span></div>
+        <div class="about-check"><div class="check-icon"><i data-lucide="check" style="width:13px;height:13px;stroke-width:3;"></i></div><span>Équipements modernes et techniques validées scientifiquement</span></div>
+        <div class="about-check"><div class="check-icon"><i data-lucide="check" style="width:13px;height:13px;stroke-width:3;"></i></div><span>Prise en charge par votre mutuelle — remboursement INAMI</span></div>
+        <div class="about-check"><div class="check-icon"><i data-lucide="check" style="width:13px;height:13px;stroke-width:3;"></i></div><span>Suivi régulier et coordination avec votre médecin traitant</span></div>
+        <div class="about-check"><div class="check-icon"><i data-lucide="check" style="width:13px;height:13px;stroke-width:3;"></i></div><span>Horaires flexibles du lundi au samedi</span></div>
+      </div>
+      <div style="margin-top:30px;display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="https://wa.me/212XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20prendre%20un%20rendez-vous%20au%20Center%20Khaouti." target="_blank" class="btn btn-wa"><svg class="ic-wa" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg> WhatsApp</a>
+        <a href="#rendez-vous" class="btn btn-outline-teal">Voir toutes les options <i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services">
+  <div class="services-inner">
+    <div class="fade-up">
+      <div class="section-tag">Nos prestations</div>
+      <h2 class="section-title">Nos spécialités</h2>
+      <p class="section-sub">Des soins adaptés à chaque situation, dispensés par des professionnels qualifiés et passionnés.</p>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card fade-up d1"><div class="svc-icon"><i data-lucide="bone" class="ic-lg"></i></div><div class="svc-name">Traumatologie & Rhumatologie</div><div class="svc-desc">Prise en charge des traumatismes ostéo-articulaires, entorses, fractures et pathologies rhumatismales.</div></div>
+      <div class="svc-card fade-up d2"><div class="svc-icon"><i data-lucide="brain" class="ic-lg"></i></div><div class="svc-name">Neurologie</div><div class="svc-desc">Rééducation post-AVC, Parkinson, SEP et troubles neurologiques. Récupération fonctionnelle progressive.</div></div>
+      <div class="svc-card fade-up d3"><div class="svc-icon"><i data-lucide="activity" class="ic-lg"></i></div><div class="svc-name">Traitement du mal du dos</div><div class="svc-desc">Lombalgies, cervicalgies, hernies discales et sciatiques. Programme de rééducation personnalisé.</div></div>
+      <div class="svc-card fade-up d1"><div class="svc-icon"><i data-lucide="wind" class="ic-lg"></i></div><div class="svc-name">Kinésithérapie respiratoire</div><div class="svc-desc">Désencombrement bronchique et rééducation respiratoire pour enfants et adultes. Asthme, BPCO, mucoviscidose.</div></div>
+      <div class="svc-card fade-up d2"><div class="svc-icon"><i data-lucide="dumbbell" class="ic-lg"></i></div><div class="svc-name">Gymnastique médicale</div><div class="svc-desc">Exercices thérapeutiques supervisés pour renforcer la musculature, améliorer la posture et la mobilité.</div></div>
+      <div class="svc-card fade-up d3"><div class="svc-icon"><i data-lucide="droplets" class="ic-lg"></i></div><div class="svc-name">Drainage lymphatique</div><div class="svc-desc">Réduction des œdèmes et amélioration de la circulation lymphatique. Post-chirurgie et pathologies veineuses.</div></div>
+      <div class="svc-card fade-up d1"><div class="svc-icon"><i data-lucide="target" class="ic-lg"></i></div><div class="svc-name">Acupuncture</div><div class="svc-desc">Médecine traditionnelle reconnue pour la gestion de la douleur, le stress et l'équilibre énergétique.</div></div>
+      <div class="svc-card fade-up d2"><div class="svc-icon"><i data-lucide="circle-dot" class="ic-lg"></i></div><div class="svc-name">Ventouses — HIJAMA</div><div class="svc-desc">Thérapie par ventouses traditionnelles pour la détente musculaire profonde et l'amélioration de la circulation.</div></div>
+      <div class="svc-card fade-up d3"><div class="svc-icon"><i data-lucide="message-circle" class="ic-lg"></i></div><div class="svc-name">Psychomotricité & Orthophonie</div><div class="svc-desc">Accompagnement des troubles du langage, de la coordination et du développement psychomoteur de l'enfant.</div></div>
+      <div class="svc-card fade-up d1"><div class="svc-icon"><i data-lucide="heart-pulse" class="ic-lg"></i></div><div class="svc-name">Rééducation périnéale</div><div class="svc-desc">Rééducation du plancher pelvien après accouchement, chirurgie ou troubles urinaires fonctionnels.</div></div>
+      <div class="svc-card fade-up d2"><div class="svc-icon"><i data-lucide="baby" class="ic-lg"></i></div><div class="svc-name">Kinésithérapie pédiatrique</div><div class="svc-desc">Soins adaptés aux nourrissons et enfants : torticolis, troubles posturaux, retard moteur.</div></div>
+      <div class="svc-card fade-up d3"><div class="svc-icon"><i data-lucide="stethoscope" class="ic-lg"></i></div><div class="svc-name">Rééducation post-opératoire</div><div class="svc-desc">Récupération fonctionnelle après prothèse de hanche, genou ou chirurgie du dos et de l'épaule.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ÉQUIPE -->
+<section id="equipe" class="equipe">
+  <div class="equipe-inner">
+    <div class="fade-up">
+      <div class="section-tag">Notre équipe</div>
+      <h2 class="section-title">Des professionnels à votre écoute</h2>
+      <p class="section-sub">Une équipe qualifiée et expérimentée, engagée pour votre santé et votre bien-être.</p>
+    </div>
+    <div class="equipe-grid">
+      <div class="team-card fade-up d1">
+        <div class="team-photo">
+          <!--
+            PHOTO : <img src="photos/adults.jpg" style="width:100%;height:100%;object-fit:cover">
+          -->
+          <div class="team-avatar">K</div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Khadija Khaouti</div>
+          <div class="team-title">Kinésithérapeute D.E. — Fondatrice</div>
+          <div class="team-tags">
+            <span class="team-tag">Sportive</span>
+            <span class="team-tag">Post-opératoire</span>
+            <span class="team-tag">Générale</span>
+          </div>
+        </div>
+      </div>
+      <div class="team-card fade-up d2">
+        <div class="team-photo" style="background:linear-gradient(135deg,#1d3d3a,#1a4d45);">
+          <div class="team-avatar" style="background:var(--orange);">+</div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Poste à pourvoir</div>
+          <div class="team-title">Kinésithérapeute spécialisé(e)</div>
+          <div class="team-tags">
+            <span class="team-tag" style="background:#fff0ec;color:#b85730;">Rejoignez-nous</span>
+          </div>
+        </div>
+      </div>
+      <div class="team-card fade-up d3">
+        <div class="team-photo" style="background:linear-gradient(135deg,#162e2c,#0d2320);">
+          <div class="team-avatar" style="background:#5b6360;">+</div>
+        </div>
+        <div class="team-info">
+          <div class="team-name">Poste à pourvoir</div>
+          <div class="team-title">Kinésithérapeute spécialisé(e)</div>
+          <div class="team-tags">
+            <span class="team-tag" style="background:#f2f2f2;color:#5b6360;">Rejoignez-nous</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section id="galerie" class="galerie">
+  <div class="galerie-inner">
+    <div class="fade-up">
+      <div class="section-tag light">Notre espace</div>
+      <h2 class="section-title white">La clinique en images</h2>
+      <p class="section-sub white">Un cadre moderne et chaleureux entièrement dédié à votre confort et à votre guérison.</p>
+    </div>
+    <div class="gallery-grid">
+      <!--
+        PHOTOS RÉELLES : remplacez chaque .g-inner par
+        <img src="photos/active.jpg" alt="..." style="width:100%;height:100%;object-fit:cover">
+      -->
+      <div class="g-item fade-up d1">
+        <img src="images/strength-recover-training.jpg" alt="Rééducation & renforcement">
+        <div class="g-lbl-bar">Rééducation & Renforcement</div>
+        <div class="g-overlay"><i data-lucide="zoom-in" style="width:30px;height:30px;color:#fff;"></i></div>
+      </div>
+      <div class="g-item fade-up d2">
+        <img src="images/header.jpg" alt="Massage thérapeutique" style="object-position:center 20%;">
+        <div class="g-lbl-bar">Massage Thérapeutique</div>
+        <div class="g-overlay"><i data-lucide="zoom-in" style="width:30px;height:30px;color:#fff;"></i></div>
+      </div>
+      <div class="g-item fade-up d3">
+        <img src="images/physiotherapy.jpg" alt="Physiothérapie">
+        <div class="g-lbl-bar">Physiothérapie</div>
+        <div class="g-overlay"><i data-lucide="zoom-in" style="width:30px;height:30px;color:#fff;"></i></div>
+      </div>
+      <div class="g-item fade-up d2">
+        <img src="images/examples-of-work.jpg" alt="Thérapie manuelle" style="object-position:center 30%;">
+        <div class="g-lbl-bar">Thérapie Manuelle</div>
+        <div class="g-overlay"><i data-lucide="zoom-in" style="width:30px;height:30px;color:#fff;"></i></div>
+      </div>
+      <div class="g-item fade-up d3">
+        <img src="images/ventouses-hijama.jpg" alt="Ventouses HIJAMA" style="object-position:center 20%;">
+        <div class="g-lbl-bar">Ventouses — HIJAMA</div>
+        <div class="g-overlay"><i data-lucide="zoom-in" style="width:30px;height:30px;color:#fff;"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TÉMOIGNAGES -->
+<section id="temoignages" class="temoignages">
+  <div class="temoignages-inner">
+    <div class="fade-up">
+      <div class="section-tag" style="justify-content:center;">Avis patients</div>
+      <h2 class="section-title">Ce que disent nos patients</h2>
+      <p class="section-sub" style="margin:0 auto;">La satisfaction de nos patients est notre plus belle récompense.</p>
+    </div>
+    <div class="temo-grid">
+      <div class="temo-card fade-up d1">
+        <div class="stars"><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i></div>
+        <p class="temo-text">"Après mon opération du genou, j'avais peur de ne plus retrouver ma mobilité. Grâce à Khadija et son équipe, j'ai récupéré bien au-delà de mes espérances. Un suivi professionnel et humain !"</p>
+        <div class="temo-author">
+          <div class="temo-ava">M</div>
+          <div><div class="temo-name">Marie D.</div><div class="temo-svc">Rééducation post-opératoire</div></div>
+        </div>
+      </div>
+      <div class="temo-card fade-up d2">
+        <div class="stars"><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i></div>
+        <p class="temo-text">"Suite à une blessure sportive, j'avais besoin d'une reprise rapide. Le traitement était efficace, les conseils précis. Je suis retourné à la compétition en 6 semaines. Je recommande vivement !"</p>
+        <div class="temo-author">
+          <div class="temo-ava" style="background:var(--orange);">T</div>
+          <div><div class="temo-name">Thomas B.</div><div class="temo-svc">Kinésithérapie sportive</div></div>
+        </div>
+      </div>
+      <div class="temo-card fade-up d3">
+        <div class="stars"><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i><i data-lucide="star" class="star" style="fill:#F5A623;stroke:none;"></i></div>
+        <p class="temo-text">"Personnel à l'écoute, espace propre et agréable. Ma fille a été suivie pour un torticolis congénital — résultats remarquables en quelques séances. Merci infiniment à toute l'équipe !"</p>
+        <div class="temo-author">
+          <div class="temo-ava" style="background:#5b6360;">F</div>
+          <div><div class="temo-name">Fatima L.</div><div class="temo-svc">Kinésithérapie pédiatrique</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HORAIRES & CARTE -->
+<section id="localisation" class="localisation">
+  <div class="local-inner">
+    <div class="fade-up">
+      <div class="section-tag">Nous trouver</div>
+      <h2 class="section-title">Horaires &amp; Localisation</h2>
+      <table class="hours-table">
+        <tr><td class="day">Lundi</td><td class="time">08:00 – 19:00</td></tr>
+        <tr><td class="day">Mardi</td><td class="time">08:00 – 19:00</td></tr>
+        <tr><td class="day">Mercredi</td><td class="time">08:00 – 19:00</td></tr>
+        <tr><td class="day">Jeudi</td><td class="time">08:00 – 19:00</td></tr>
+        <tr><td class="day">Vendredi</td><td class="time">08:00 – 18:00</td></tr>
+        <tr><td class="day">Samedi</td><td class="time">09:00 – 13:00</td></tr>
+        <tr><td class="day">Dimanche</td><td class="off">Fermé</td></tr>
+      </table>
+      <div class="contact-items">
+        <!-- UPDATE: real address, phone, email, WhatsApp -->
+        <div class="ci"><div class="ci-icon"><i data-lucide="map-pin" class="ic-sm"></i></div><span>665 Guich Oudayas, Temara (Rez de chaussée) — Près de BMCI</span></div>
+        <div class="ci"><div class="ci-icon"><i data-lucide="phone" class="ic-sm"></i></div><a href="tel:+212XXXXXXXXX" style="color:var(--teal);font-weight:700;">+212 5XX XXX XXX</a></div>
+        <div class="ci"><div class="ci-icon"><i data-lucide="phone-call" class="ic-sm"></i></div><a href="tel:+212XXXXXXXXX" style="color:var(--orange);font-weight:700;">+212 6XX XXX XXX — Urgences</a></div>
+        <div class="ci"><div class="ci-icon"><i data-lucide="mail" class="ic-sm"></i></div><a href="mailto:contact@centerkhaouti.ma" style="color:var(--teal);font-weight:700;">contact@centerkhaouti.ma</a></div>
+        <div class="ci"><div class="ci-icon" style="background:#e6f9ee;"><svg class="ic-sm" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg></div><a href="https://wa.me/212XXXXXXXXX" target="_blank" style="color:#25D366;font-weight:700;">WhatsApp — réponse rapide</a></div>
+      </div>
+      <div style="margin-top:26px;display:flex;gap:11px;flex-wrap:wrap;">
+        <a href="https://wa.me/212XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20prendre%20un%20rendez-vous." target="_blank" class="btn btn-wa"><svg class="ic-wa" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg> WhatsApp</a>
+        <a href="tel:+212XXXXXXXXX" class="btn btn-teal"><i data-lucide="phone"></i> Appeler</a>
+      </div>
+    </div>
+    <!-- Leaflet map — UPDATE coordinates below -->
+    <div class="fade-up d2"><div id="map"></div></div>
+  </div>
+</section>
+
+<!-- RENDEZ-VOUS -->
+<section id="rendez-vous" class="rdv">
+  <div class="rdv-inner">
+    <div class="fade-up" style="text-align:center;">
+      <div class="section-tag light" style="justify-content:center;">Réservation</div>
+      <h2 class="section-title white">Prendre rendez-vous</h2>
+      <p class="section-sub white" style="margin:0 auto;">Choisissez la méthode qui vous convient — nous confirmons dans les 2 heures.</p>
+    </div>
+    <div class="rdv-grid fade-up d1">
+
+      <!-- PRIMARY: DIRECT CONTACT -->
+      <div class="rdv-card" style="display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:#25D366;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg>
+          </div>
+          <div>
+            <div class="rdv-card-title" style="margin-bottom:2px;">Contact immédiat</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.45);">Réponse dans l'heure</div>
+          </div>
+        </div>
+        <div class="rdv-card-desc">Le moyen le plus rapide de nous joindre. Envoyez un message WhatsApp ou appelez directement — nous vous répondons en quelques minutes.</div>
+        <div class="direct-btns">
+          <!-- UPDATE: real WhatsApp number (format 32XXXXXXXXX) -->
+          <a href="https://wa.me/212XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20prendre%20un%20rendez-vous%20au%20Center%20Khaouti." target="_blank"
+             class="btn btn-wa" style="justify-content:center;font-size:16px;padding:16px;">
+            <svg class="ic-wa" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg>
+            WhatsApp — Prendre RDV
+          </a>
+          <!-- UPDATE: real phone -->
+          <a href="tel:+212XXXXXXXXX" class="btn btn-phone" style="justify-content:center;padding:14px;">
+            <i data-lucide="phone"></i> +212 5XX XXX XXX — Appeler
+          </a>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#fff;margin-bottom:8px;"><i data-lucide="calendar" style="width:15px;height:15px;"></i> Agenda en ligne (Cal.com)</div>
+        <div class="rdv-card-desc" style="margin-bottom:14px;">Choisissez vous-même votre créneau — confirmation immédiate.</div>
+        <!-- UPDATE: replace VOTRE_NOM with your cal.com username -->
+        <a href="https://cal.com/VOTRE_NOM/consultation" target="_blank"
+           class="btn btn-teal" style="justify-content:center;">
+          Choisir un créneau →
+        </a>
+
+        <div class="rdv-note" style="margin-top:16px;display:flex;align-items:center;gap:6px;">
+          <i data-lucide="clock" style="width:13px;height:13px;"></i> Lun–Ven 08:00–19:00 · Sam 09:00–13:00
+        </div>
+      </div>
+
+      <!-- SECONDARY: FORM -->
+      <div class="rdv-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i data-lucide="clipboard-list" style="width:20px;height:20px;color:#fff;"></i></div>
+          <div>
+            <div class="rdv-card-title" style="margin-bottom:2px;">Formulaire de demande</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.45);">Réponse sous 2h en journée</div>
+          </div>
+        </div>
+        <div class="rdv-card-desc">Remplissez ce formulaire et nous vous recontactons pour confirmer votre créneau.</div>
+        <!-- UPDATE: replace YOUR_FORM_ID → créez un compte sur formspree.io -->
+        <form class="rdv-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <div class="form-row">
+            <input type="text" name="nom" placeholder="Nom complet" required>
+            <input type="tel" name="telephone" placeholder="Téléphone" required>
+          </div>
+          <input type="email" name="email" placeholder="Adresse email" required>
+          <select name="service" required>
+            <option value="" disabled selected>Choisir un service</option>
+            <option>Kinésithérapie générale</option>
+            <option>Kinésithérapie sportive</option>
+            <option>Post-opératoire</option>
+            <option>Kinésithérapie pédiatrique</option>
+            <option>Électrothérapie</option>
+            <option>Massage thérapeutique</option>
+            <option>Rééducation neurologique</option>
+            <option>Drainage lymphatique</option>
+            <option>Autre</option>
+          </select>
+          <input type="text" name="disponibilite" placeholder="Disponibilités souhaitées (ex : Mardi matin)">
+          <textarea name="message" placeholder="Informations complémentaires (optionnel)"></textarea>
+          <input type="text" name="_gotcha" style="display:none">
+          <button type="submit" class="btn btn-teal" style="width:100%;justify-content:center;padding:15px;">Envoyer ma demande →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <svg width="28" height="32" viewBox="0 0 222.44 252.01" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#f2794f" d="M161.33,22.39c8.25,37.79-46.58,50.81-56.21,13.35-8.25-37.79,46.58-50.81,56.21-13.35Z"/>
+            <path fill="#0fa99b" d="M25.12,18.89C9.98,21.13-3.01,41.59.61,57.74c3.1,13.84,17.16,19.05,33.16,30.08,54.82,37.78,76.98,105.59,87.94,139.12,3.39,10.37,7.62,25.39,10.09,25.07C143.5,179.9,80.83,23.57,25.12,18.89Z"/>
+            <path fill="rgba(255,255,255,.45)" d="M207.27,58.13c9.14,1.81,16.98,18.3,14.8,31.31-1.87,11.15-10.36,15.36-20.02,24.24-33.09,30.45-46.48,85.09-53.1,112.12-2.05,8.36-4.6,20.47-6.09,20.2-6.8-53.16,27.94-181.63,64.41-187.88Z"/>
+          </svg>
+          <div>
+            <div class="footer-brand-name">CENTER KHAOUTI</div>
+            <div class="footer-brand-sub">Kinésithérapie &amp; Physiothérapie</div>
+          </div>
+        </div>
+        <p class="footer-brand-desc">Votre centre de kinésithérapie et physiothérapie à Bruxelles. Des soins de qualité, une équipe à votre écoute, des résultats durables.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigation</div>
+        <ul class="footer-links">
+          <li><a href="#accueil">Accueil</a></li>
+          <li><a href="#a-propos">À propos</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#equipe">Équipe</a></li>
+          <li><a href="#galerie">Galerie</a></li>
+          <li><a href="#rendez-vous">Prendre RDV</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-links">
+          <li><a href="#services">Kinésithérapie générale</a></li>
+          <li><a href="#services">Kinésithérapie sportive</a></li>
+          <li><a href="#services">Post-opératoire</a></li>
+          <li><a href="#services">Pédiatrique</a></li>
+          <li><a href="#services">Massage thérapeutique</a></li>
+          <li><a href="#services">Neurologique</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <ul class="footer-links">
+          <li><a href="#" style="display:flex;align-items:center;gap:7px;"><i data-lucide="map-pin" class="ic-sm"></i> 665 Guich Oudayas, Temara</a></li>
+          <li><a href="tel:+212XXXXXXXXX" style="display:flex;align-items:center;gap:7px;"><i data-lucide="phone" class="ic-sm"></i> +212 5XX XXX XXX</a></li>
+          <li><a href="tel:+212XXXXXXXXX" style="display:flex;align-items:center;gap:7px;color:var(--orange);"><i data-lucide="phone-call" class="ic-sm"></i> +212 6XX XXX XXX — Urgences</a></li>
+          <li><a href="mailto:contact@centerkhaouti.ma" style="display:flex;align-items:center;gap:7px;"><i data-lucide="mail" class="ic-sm"></i> contact@centerkhaouti.ma</a></li>
+          <li><a href="https://wa.me/32XXXXXXXXX" target="_blank" style="display:flex;align-items:center;gap:7px;"><svg class="ic-sm" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg> WhatsApp</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2025 Center Khaouti — Tous droits réservés</div>
+      <div class="footer-legal">
+        <a href="#">Mentions légales</a>
+        <a href="#">Politique de confidentialité</a>
+        <a href="#">RGPD</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp float — UPDATE number -->
+<a href="https://wa.me/212XXXXXXXXX?text=Bonjour%2C%20je%20souhaite%20prendre%20un%20rendez-vous." class="float-wa" target="_blank" aria-label="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.116.553 4.103 1.523 5.828L.057 23.273a.75.75 0 0 0 .92.92l5.444-1.466A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0Zm0 22.5a10.44 10.44 0 0 1-5.337-1.46l-.382-.228-3.97 1.07 1.07-3.97-.228-.382A10.44 10.44 0 0 1 1.5 12C1.5 6.201 6.201 1.5 12 1.5S22.5 6.201 22.5 12 17.799 22.5 12 22.5Z"/></svg>
+</a>
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Haut de page">
+  <i data-lucide="chevron-up" style="width:20px;height:20px;"></i>
+</button>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ── NAV scroll ── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('solid', window.scrollY > 60);
+  document.getElementById('btt').classList.toggle('show', window.scrollY > 400);
+}, {passive:true});
+
+/* ── Mobile menu ── */
+const burger = document.getElementById('burger');
+const mobMenu = document.getElementById('mob-menu');
+document.getElementById('mob-close').onclick = () => mobMenu.classList.remove('open');
+burger.onclick = () => mobMenu.classList.add('open');
+document.querySelectorAll('.mob-link').forEach(l => l.addEventListener('click', () => mobMenu.classList.remove('open')));
+
+/* ── Scroll animations ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:.1, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+/* ── Active nav link ── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 110) cur = s.id; });
+  navLinks.forEach(a => { a.style.color = a.getAttribute('href') === `#${cur}` ? 'var(--teal-g)' : ''; });
+}, {passive:true});
+
+/* ── Highlight today's hours ── */
+const days = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const today = days[new Date().getDay()];
+document.querySelectorAll('.hours-table tr').forEach(row => {
+  const d = row.querySelector('.day');
+  if (d && d.textContent.trim() === today) row.classList.add('row-today');
+});
+
+/* ── Leaflet map ──
+   UPDATE: replace LAT/LNG with real clinic coordinates.
+   Find them at openstreetmap.org (right-click → Show address)
+*/
+const LAT  = 33.9227;   // Guich Oudayas, Temara — vérifiez sur openstreetmap.org
+const LNG  = -6.9148;   // ← affinez si besoin
+const ADDR = 'Center Khaouti — Kinésithérapie &amp; Physiothérapie';
+
+const map = L.map('map', {scrollWheelZoom:false}).setView([LAT, LNG], 16);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom:19
+}).addTo(map);
+
+const pin = L.divIcon({
+  html:`<div style="width:34px;height:34px;border-radius:50% 50% 50% 0;
+        background:var(--teal,#0fa99b);
+        transform:rotate(-45deg);border:3px solid #fff;"></div>`,
+  className:'', iconSize:[34,34], iconAnchor:[17,34], popupAnchor:[0,-38]
+});
+
+L.marker([LAT, LNG], {icon:pin}).addTo(map)
+  .bindPopup(`<div style="font-family:'Nunito Sans',sans-serif;padding:4px 2px;">
+    <strong style="font-family:'Nunito',sans-serif;font-size:13px;color:#1d3331;">${ADDR}</strong><br>
+    <span style="font-size:12px;color:#7c8987;">665 Guich Oudayas, Temara — Près de BMCI</span><br><br>
+    <a href="https://www.openstreetmap.org/directions?to=${LAT},${LNG}" target="_blank"
+       style="color:#0fa99b;font-weight:700;font-size:12px;">Itinéraire →</a>
+  </div>`, {maxWidth:240})
+  .openPopup();
+
+/* ── Formspree async submit ── */
+const form = document.querySelector('.rdv-form');
+if (form) {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type="submit"]');
+    const orig = btn.innerHTML;
+    btn.innerHTML = 'Envoi en cours…'; btn.disabled = true;
+    try {
+      const res = await fetch(form.action, {
+        method:'POST', body:new FormData(form), headers:{'Accept':'application/json'}
+      });
+      if (res.ok) {
+        btn.innerHTML = '✓ Message envoyé ! Nous vous contactons bientôt.';
+        btn.style.background = 'var(--teal-d)'; form.reset();
+      } else throw new Error();
+    } catch {
+      btn.innerHTML = '✗ Erreur — Appelez-nous directement.';
+      btn.style.background = 'var(--orange)'; btn.disabled = false;
+      setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.disabled = false; }, 5000);
+    }
+  });
+}
+
+/* ── Init Lucide icons ── */
+lucide.createIcons();
+</script>
+</body>
+</html>
