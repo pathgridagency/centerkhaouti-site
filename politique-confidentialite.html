@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Politique de confidentialité — Centre Khaouti</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --teal:#0fa99b;--teal-d:#0d8f83;--teal-g:#12c4b5;
+  --night:#1d3331;--night2:#0a2320;
+  --orange:#f2794f;--sage:#e7eae6;--wash:#e8f5f3;
+  --text:#2c3a3a;--muted:#7c8987;--border:#d5e0dd;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito Sans',sans-serif;color:var(--text);background:#fff;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+ul{list-style:none;}
+button{cursor:pointer;font-family:inherit;}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:var(--night);box-shadow:0 4px 30px rgba(0,0,0,.25);}
+.nav-logo{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.nav-logo-name{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;color:#fff;line-height:1.1;}
+.nav-logo-sub{font-size:10px;color:var(--teal-g);font-weight:700;letter-spacing:.05em;}
+.nav-back{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.75);font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px;transition:background .2s,color .2s;}
+.nav-back:hover{background:rgba(255,255,255,.1);color:#fff;}
+
+/* HERO BAND */
+.page-hero{background:linear-gradient(140deg,var(--night) 0%,#0d2e2a 100%);padding:110px 48px 60px;text-align:center;}
+.page-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(30,201,165,.14);border:1px solid rgba(30,201,165,.3);border-radius:20px;padding:6px 16px;font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--teal-g);text-transform:uppercase;margin-bottom:18px;}
+.page-hero h1{font-family:'Nunito',sans-serif;font-size:clamp(28px,4vw,46px);font-weight:900;color:#fff;margin-bottom:12px;}
+.page-hero p{font-size:15px;color:rgba(255,255,255,.55);max-width:580px;margin:0 auto;}
+
+/* CONTENT */
+.content{max-width:860px;margin:0 auto;padding:64px 48px 100px;}
+.last-update{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);background:var(--sage);padding:6px 14px;border-radius:20px;margin-bottom:48px;}
+
+.section-block{margin-bottom:48px;}
+.section-block h2{font-family:'Nunito',sans-serif;font-weight:900;font-size:22px;color:var(--night);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--wash);}
+.section-block h3{font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:var(--night);margin:20px 0 8px;}
+.section-block p{font-size:15px;color:var(--text);line-height:1.8;margin-bottom:12px;}
+.section-block ul{padding-left:0;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.section-block ul li{font-size:15px;color:var(--text);line-height:1.7;padding-left:20px;position:relative;}
+.section-block ul li::before{content:'–';position:absolute;left:0;color:var(--teal);}
+.law-ref{display:inline;background:var(--wash);color:var(--teal-d);font-size:12px;font-weight:800;padding:2px 8px;border-radius:6px;white-space:nowrap;}
+.highlight-box{background:var(--wash);border-left:4px solid var(--teal);border-radius:0 10px 10px 0;padding:16px 20px;margin:16px 0;}
+.highlight-box p{margin:0;font-size:14px;color:var(--night);font-weight:600;}
+.warning-box{background:#fff5f0;border-left:4px solid var(--orange);border-radius:0 10px 10px 0;padding:16px 20px;margin:16px 0;}
+.warning-box p{margin:0;font-size:14px;color:#7a3a1e;font-weight:600;}
+
+/* RIGHTS TABLE */
+.rights-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;}
+.right-card{background:var(--sage);border-radius:12px;padding:18px 20px;}
+.right-card strong{font-family:'Nunito',sans-serif;font-weight:900;font-size:14px;color:var(--night);display:block;margin-bottom:5px;}
+.right-card p{font-size:13px;color:var(--muted);margin:0;line-height:1.6;}
+
+/* FOOTER */
+footer{background:var(--night2);color:rgba(255,255,255,.55);padding:40px 48px 24px;}
+.footer-inner{max-width:860px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;font-size:12px;}
+.footer-legal{display:flex;gap:18px;}
+.footer-legal a{color:rgba(255,255,255,.35);transition:color .2s;}
+.footer-legal a:hover{color:rgba(255,255,255,.7);}
+
+@media(max-width:700px){
+  #nav{padding:0 18px;}
+  .page-hero{padding:90px 18px 44px;}
+  .content{padding:44px 18px 70px;}
+  .rights-grid{grid-template-columns:1fr;}
+  footer{padding:30px 18px 20px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <svg width="28" height="32" viewBox="0 0 222.44 252.01" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#f2794f" d="M161.33,22.39c8.25,37.79-46.58,50.81-56.21,13.35-8.25-37.79,46.58-50.81,56.21-13.35Z"/>
+      <path fill="#0fa99b" d="M25.12,18.89C9.98,21.13-3.01,41.59.61,57.74c3.1,13.84,17.16,19.05,33.16,30.08,54.82,37.78,76.98,105.59,87.94,139.12,3.39,10.37,7.62,25.39,10.09,25.07C143.5,179.9,80.83,23.57,25.12,18.89Z"/>
+      <path fill="#fff" d="M207.27,58.13c9.14,1.81,16.98,18.3,14.8,31.31-1.87,11.15-10.36,15.36-20.02,24.24-33.09,30.45-46.48,85.09-53.1,112.12-2.05,8.36-4.6,20.47-6.09,20.2-6.8-53.16,27.94-181.63,64.41-187.88Z"/>
+    </svg>
+    <div>
+      <div class="nav-logo-name">CENTRE KHAOUTI</div>
+      <div class="nav-logo-sub">Kinésithérapie &amp; Physiothérapie</div>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back"><i data-lucide="arrow-left" style="width:15px;height:15px;"></i> Retour au site</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-tag"><i data-lucide="shield" style="width:12px;height:12px;"></i> Protection des données</div>
+  <h1>Politique de confidentialité</h1>
+  <p>Vos données personnelles sont traitées conformément à la <strong style="color:var(--teal-g);">Loi n° 09-08</strong> relative à la protection des personnes physiques à l'égard du traitement des données à caractère personnel.</p>
+</div>
+
+<div class="content">
+
+  <div class="last-update"><i data-lucide="clock" style="width:13px;height:13px;"></i> Dernière mise à jour : juin 2025</div>
+
+  <!-- INTRO -->
+  <div class="section-block">
+    <h2>Préambule</h2>
+    <p>Le Centre Khaouti attache une importance primordiale à la protection de vos données personnelles. En tant que professionnel de santé, nous sommes soumis à une double obligation : le respect du <strong>secret professionnel médical</strong> et les exigences de la <span class="law-ref">Loi n° 09-08</span> du 18 février 2009, promulguée par le Dahir n° 1-09-15.</p>
+    <p>La présente politique s'applique à toutes les données collectées via ce site web, nos formulaires de contact, nos canaux WhatsApp et nos communications téléphoniques.</p>
+    <div class="highlight-box">
+      <p>Le Centre Khaouti ne vend, ne loue et ne cède jamais vos données personnelles à des tiers à des fins commerciales.</p>
+    </div>
+  </div>
+
+  <!-- 1. RESPONSABLE DU TRAITEMENT -->
+  <div class="section-block">
+    <h2>1. Responsable du traitement</h2>
+    <p>Conformément à l'article 1er de la <span class="law-ref">Loi n° 09-08</span>, le responsable du traitement est :</p>
+    <ul>
+      <li><strong>Nom :</strong> Khadija Khaouti</li>
+      <li><strong>Qualité :</strong> Kinésithérapeute D.E., responsable du Centre Khaouti</li>
+      <li><strong>Adresse :</strong> 665 Guich Oudayas, Temara, Maroc</li>
+      <li><strong>Email :</strong> contact@centerkhaouti.ma</li>
+      <li><strong>Téléphone :</strong> +212 5XX XXX XXX</li>
+    </ul>
+  </div>
+
+  <!-- 2. DONNÉES COLLECTÉES -->
+  <div class="section-block">
+    <h2>2. Données collectées</h2>
+
+    <h3>2.1 Données de contact et de prise de rendez-vous</h3>
+    <p>Lorsque vous remplissez notre formulaire ou nous contactez, nous collectons :</p>
+    <ul>
+      <li>Nom et prénom</li>
+      <li>Numéro de téléphone</li>
+      <li>Adresse email</li>
+      <li>Type de soin souhaité</li>
+      <li>Disponibilités et informations complémentaires que vous nous communiquez volontairement</li>
+    </ul>
+
+    <h3>2.2 Données de santé (données sensibles)</h3>
+    <p>Dans le cadre de la prise en charge thérapeutique, des données de santé peuvent être collectées (antécédents, motif de consultation, ordonnances). Ces données sont des <strong>données à caractère personnel sensibles</strong> au sens de l'article 1er de la <span class="law-ref">Loi n° 09-08</span> et bénéficient d'une protection renforcée.</p>
+    <div class="warning-box">
+      <p>Les données de santé ne sont jamais collectées via ce site web. Elles le sont uniquement lors de la consultation physique, dans le respect du secret médical.</p>
+    </div>
+
+    <h3>2.3 Données de navigation</h3>
+    <p>Ce site ne dépose pas de cookies de traçage ou de profilage. Les données de navigation (adresse IP, type de navigateur, pages consultées) peuvent être enregistrées automatiquement par notre hébergeur Vercel Inc. à des fins de sécurité et de performance, conformément à sa propre politique de confidentialité.</p>
+  </div>
+
+  <!-- 3. FINALITÉS -->
+  <div class="section-block">
+    <h2>3. Finalités du traitement</h2>
+    <p>Conformément au principe de finalité posé par la <span class="law-ref">Loi n° 09-08</span>, vos données sont collectées pour les seules finalités suivantes :</p>
+    <ul>
+      <li>Gestion et confirmation de vos demandes de rendez-vous</li>
+      <li>Communication relative à votre prise en charge thérapeutique</li>
+      <li>Respect des obligations légales en matière de dossier patient</li>
+      <li>Réponse à vos demandes d'information</li>
+    </ul>
+    <p>Aucune donnée n'est utilisée à des fins de marketing, de prospection commerciale ou de profilage.</p>
+  </div>
+
+  <!-- 4. BASE LÉGALE -->
+  <div class="section-block">
+    <h2>4. Base légale du traitement</h2>
+    <p>Le traitement de vos données repose sur les bases légales suivantes, conformément à la <span class="law-ref">Loi n° 09-08</span> :</p>
+    <ul>
+      <li><strong>Votre consentement</strong> (art. 4) : lors de la soumission du formulaire de contact</li>
+      <li><strong>L'exécution d'un contrat</strong> (art. 4) : pour la gestion des rendez-vous et la prise en charge thérapeutique</li>
+      <li><strong>L'obligation légale</strong> : conservation du dossier médical conformément au Code de déontologie des kinésithérapeutes</li>
+    </ul>
+  </div>
+
+  <!-- 5. DESTINATAIRES -->
+  <div class="section-block">
+    <h2>5. Destinataires des données</h2>
+    <p>Vos données sont accessibles uniquement aux personnes suivantes :</p>
+    <ul>
+      <li>Khadija Khaouti et les membres de l'équipe soignante du centre, dans le cadre strict du secret professionnel</li>
+      <li>Formspree Inc. (traitement du formulaire de contact), soumis à une politique de confidentialité propre</li>
+      <li>Vercel Inc. (hébergement), pour les seuls besoins techniques</li>
+    </ul>
+    <p>Aucun transfert de données vers des tiers non médicaux n'est effectué sans votre consentement explicite, sauf obligation légale.</p>
+
+    <h3>Transferts hors du Maroc</h3>
+    <p>Nos prestataires techniques (Vercel, Formspree) sont établis aux États-Unis. Ces transferts sont encadrés par des garanties contractuelles appropriées. Conformément à l'article 43 de la <span class="law-ref">Loi n° 09-08</span>, ces transferts ont fait l'objet d'une déclaration auprès de la CNDP.</p>
+  </div>
+
+  <!-- 6. DURÉE DE CONSERVATION -->
+  <div class="section-block">
+    <h2>6. Durée de conservation</h2>
+    <ul>
+      <li><strong>Données de contact (formulaire) :</strong> 3 ans à compter du dernier contact, puis suppression ou anonymisation</li>
+      <li><strong>Dossier patient (données de santé) :</strong> 10 ans à compter de la dernière consultation, conformément aux exigences du Code de déontologie et de la réglementation sanitaire marocaine</li>
+      <li><strong>Données de navigation :</strong> conservées par Vercel conformément à sa politique (généralement 30 jours)</li>
+    </ul>
+  </div>
+
+  <!-- 7. VOS DROITS -->
+  <div class="section-block">
+    <h2>7. Vos droits</h2>
+    <p>Conformément aux articles 7 à 10 de la <span class="law-ref">Loi n° 09-08</span>, vous disposez des droits suivants :</p>
+    <div class="rights-grid">
+      <div class="right-card">
+        <strong>Droit d'accès (art. 7)</strong>
+        <p>Obtenir confirmation que vos données sont traitées et en recevoir une copie.</p>
+      </div>
+      <div class="right-card">
+        <strong>Droit de rectification (art. 8)</strong>
+        <p>Faire corriger toute donnée inexacte, incomplète ou périmée vous concernant.</p>
+      </div>
+      <div class="right-card">
+        <strong>Droit d'opposition (art. 10)</strong>
+        <p>Vous opposer, pour des motifs légitimes, au traitement de vos données.</p>
+      </div>
+      <div class="right-card">
+        <strong>Droit à l'effacement</strong>
+        <p>Demander la suppression de vos données, sous réserve des obligations légales de conservation.</p>
+      </div>
+    </div>
+    <p>Pour exercer ces droits, adressez votre demande par email à <strong>contact@centerkhaouti.ma</strong> ou par courrier à l'adresse du centre. Nous répondrons dans un délai maximum de <strong>30 jours</strong>.</p>
+
+    <h3>Recours auprès de la CNDP</h3>
+    <p>Si vous estimez que le traitement de vos données ne respecte pas la loi marocaine, vous pouvez introduire une réclamation auprès de la <strong>Commission Nationale de contrôle de la Protection des Données à caractère Personnel (CNDP)</strong> :</p>
+    <ul>
+      <li><strong>Adresse :</strong> Angle Avenue Annakhil et Rue Alboraq, Hay Riad, Rabat, Maroc</li>
+      <li><strong>Site :</strong> www.cndp.ma</li>
+      <li><strong>Téléphone :</strong> +212 5 37 57 99 00</li>
+    </ul>
+  </div>
+
+  <!-- 8. SÉCURITÉ -->
+  <div class="section-block">
+    <h2>8. Sécurité des données</h2>
+    <p>Nous mettons en œuvre les mesures techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, perte, altération ou divulgation, conformément à l'article 23 de la <span class="law-ref">Loi n° 09-08</span> :</p>
+    <ul>
+      <li>Transmission chiffrée via HTTPS (TLS)</li>
+      <li>Accès aux données limité aux seules personnes habilitées</li>
+      <li>Respect du secret professionnel par l'ensemble du personnel soignant</li>
+      <li>Hébergement sur infrastructure sécurisée (Vercel)</li>
+    </ul>
+  </div>
+
+  <!-- 9. COOKIES -->
+  <div class="section-block">
+    <h2>9. Cookies et traceurs</h2>
+    <p>Ce site n'utilise <strong>aucun cookie de traçage, de profilage ou publicitaire</strong>. Aucune technologie d'analyse comportementale (Google Analytics, Meta Pixel ou similaire) n'est déployée sur ce site.</p>
+    <p>Les seules données techniques enregistrées sont les logs serveur standard de l'hébergeur Vercel, nécessaires au bon fonctionnement du site.</p>
+  </div>
+
+  <!-- 10. MODIFICATIONS -->
+  <div class="section-block">
+    <h2>10. Modifications de la politique</h2>
+    <p>Le Centre Khaouti se réserve le droit de mettre à jour la présente politique à tout moment afin de refléter les évolutions légales ou les changements dans nos pratiques. La date de dernière mise à jour est indiquée en haut de ce document. En cas de modification substantielle, une information sera publiée de manière visible sur le site.</p>
+  </div>
+
+  <!-- 11. CONTACT -->
+  <div class="section-block">
+    <h2>11. Contact &amp; délégué à la protection des données</h2>
+    <p>Pour toute question relative à la présente politique ou pour exercer vos droits :</p>
+    <ul>
+      <li><strong>Email :</strong> contact@centerkhaouti.ma</li>
+      <li><strong>Téléphone :</strong> +212 5XX XXX XXX</li>
+      <li><strong>Courrier :</strong> Centre Khaouti, 665 Guich Oudayas, Temara, Maroc</li>
+    </ul>
+    <div class="highlight-box">
+      <p>Toute demande relative à vos données sera traitée dans un délai de 30 jours ouvrables à compter de sa réception.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2025 Centre Khaouti — Tous droits réservés</div>
+    <div class="footer-legal">
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="politique-confidentialite.html">Confidentialité</a>
+      <a href="index.html">Accueil</a>
+    </div>
+  </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
