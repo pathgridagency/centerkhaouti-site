@@ -2,3 +2,14 @@
 Thumbs.db
 *.log
 .vercel
+
+# Notes / mémoire locales (jamais sur GitHub)
+memory/
+.claude/
+CLAUDE.local.md
+*.local.md
+
+# Secrets
+.env
+.env.*
+*.pem

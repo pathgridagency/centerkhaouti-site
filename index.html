@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Centre Khaouti — Kinésithérapie & Physiothérapie | Bruxelles</title>
-<meta name="description" content="Centre Khaouti, votre centre de kinésithérapie et physiothérapie à Bruxelles. Prenez rendez-vous en ligne. Spécialités : sportive, post-opératoire, pédiatrique, neurologique.">
+<title>Centre Khaouti — Kinésithérapie & Physiothérapie | Temara</title>
+<meta name="description" content="Centre Khaouti, votre centre de kinésithérapie et physiothérapie à Temara. Prenez rendez-vous en ligne. Spécialités : sportive, post-opératoire, pédiatrique, neurologique.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -134,9 +134,6 @@ p.section-sub.white{color:rgba(255,255,255,.6);}
 .svc-desc{font-size:13px;color:var(--muted);line-height:1.65;}
 
 /* ── TEAM ── */
-.equipe{padding:100px 48px;background:#fff;}
-.equipe-inner{max-width:1100px;margin:0 auto;}
-.equipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;margin-top:52px;}
 .team-card{border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);transition:transform .25s;}
 .team-card:hover{transform:translateY(-6px);}
 .team-photo{aspect-ratio:4/3;background:linear-gradient(135deg,var(--night),#2a5550);display:flex;align-items:center;justify-content:center;}
@@ -212,6 +209,19 @@ p.section-sub.white{color:rgba(255,255,255,.6);}
 .direct-btns{display:flex;flex-direction:column;gap:11px;}
 .divider-line{border:none;border-top:1px solid rgba(255,255,255,.1);margin:18px 0;}
 .rdv-note{font-size:12px;color:rgba(255,255,255,.32);line-height:1.65;}
+/* Online booking */
+.bk-label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;color:rgba(255,255,255,.55);}
+.rdv-form input[type=date]{color-scheme:dark;}
+.bk-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px;max-height:190px;overflow-y:auto;}
+.bk-hint{grid-column:1/-1;font-size:13px;color:rgba(255,255,255,.4);}
+.bk-slot{padding:9px 0;border-radius:9px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;font-weight:700;font-size:13px;transition:background .15s,border-color .15s;}
+.bk-slot:hover{border-color:var(--teal-g);}
+.bk-slot.on{background:var(--teal);border-color:var(--teal);}
+.bk-msg{font-size:13px;line-height:1.5;min-height:1em;color:rgba(255,255,255,.6);}
+.bk-msg.ok{color:#7ee8c9;}
+.bk-msg.err{color:#ffb39a;}
+.bk-msg.warn{color:#ffd58a;}
+.rdv-form :disabled{opacity:.55;cursor:not-allowed;}
 
 /* ── FOOTER ── */
 footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24px;}
@@ -257,7 +267,7 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
   .hero-sub{font-size:15px;}
   .hero-btns{flex-direction:column;gap:10px;}
   .hero-btns .btn-teal,.hero-btns .btn-wa,.hero-btns .btn-outline{width:100%;justify-content:center;text-align:center;}
-  .about,.services,.equipe,.galerie,.temoignages,.localisation,.rdv{padding:56px 18px;}
+  .about,.services,.galerie,.temoignages,.localisation,.rdv{padding:56px 18px;}
   .about-img{height:240px;}
   .gallery-grid{grid-template-columns:1fr 1fr;grid-auto-rows:150px;}
   .g-item:first-child{grid-row:span 1;}
@@ -295,7 +305,6 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
   <ul class="nav-links">
     <li><a href="#a-propos">À propos</a></li>
     <li><a href="#services">Services</a></li>
-    <li><a href="#equipe">Équipe</a></li>
     <li><a href="#galerie">Galerie</a></li>
     <li><a href="#localisation">Horaires</a></li>
     <li><a href="#rendez-vous" class="cta"><i data-lucide="calendar" style="width:14px;height:14px;flex-shrink:0;"></i> Prendre RDV</a></li>
@@ -310,7 +319,6 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
   <button class="mob-close" id="mob-close">✕</button>
   <a href="#a-propos" class="mob-link">À propos</a>
   <a href="#services" class="mob-link">Services</a>
-  <a href="#equipe" class="mob-link">Équipe</a>
   <a href="#galerie" class="mob-link">Galerie</a>
   <a href="#localisation" class="mob-link">Horaires</a>
   <a href="#rendez-vous" class="mob-link">Prendre RDV</a>
@@ -329,7 +337,7 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
   <div class="hero-inner">
     <div class="hero-badge"><i data-lucide="shield-check" style="width:13px;height:13px;"></i> Centre agréé · Temara, Maroc</div>
     <h1>Votre santé,<br><em>notre priorité</em></h1>
-    <p class="hero-sub">Kinésithérapie et physiothérapie de qualité à Bruxelles. Des soins personnalisés pour votre récupération, votre performance et votre bien-être au quotidien.</p>
+    <p class="hero-sub">Kinésithérapie et physiothérapie de qualité à Temara. Des soins personnalisés pour votre récupération, votre performance et votre bien-être au quotidien.</p>
     <div class="hero-btns">
       <a href="tel:+212537614765" class="btn btn-teal btn-lg">
         <i data-lucide="phone"></i> Appeler la clinique
@@ -368,7 +376,7 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
       </div>
       <div class="about-float">
         <div class="about-float-num">2014</div>
-        <div class="about-float-lbl">Fondé à Bruxelles</div>
+        <div class="about-float-lbl">Fondé à Temara</div>
       </div>
     </div>
     <div class="fade-up d1">
@@ -411,60 +419,6 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
       <div class="svc-card fade-up d1"><div class="svc-icon"><i data-lucide="heart-pulse" class="ic-lg"></i></div><div class="svc-name">Rééducation périnéale</div><div class="svc-desc">Rééducation du plancher pelvien après accouchement, chirurgie ou troubles urinaires fonctionnels.</div></div>
       <div class="svc-card fade-up d2"><div class="svc-icon"><i data-lucide="baby" class="ic-lg"></i></div><div class="svc-name">Kinésithérapie pédiatrique</div><div class="svc-desc">Soins adaptés aux nourrissons et enfants : torticolis, troubles posturaux, retard moteur.</div></div>
       <div class="svc-card fade-up d3"><div class="svc-icon"><i data-lucide="stethoscope" class="ic-lg"></i></div><div class="svc-name">Rééducation post-opératoire</div><div class="svc-desc">Récupération fonctionnelle après prothèse de hanche, genou ou chirurgie du dos et de l'épaule.</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ÉQUIPE -->
-<section id="equipe" class="equipe">
-  <div class="equipe-inner">
-    <div class="fade-up">
-      <div class="section-tag">Notre équipe</div>
-      <h2 class="section-title">Des professionnels à votre écoute</h2>
-      <p class="section-sub">Une équipe qualifiée et expérimentée, engagée pour votre santé et votre bien-être.</p>
-    </div>
-    <div class="equipe-grid">
-      <div class="team-card fade-up d1">
-        <div class="team-photo">
-          <!--
-            PHOTO : <img src="photos/adults.jpg" style="width:100%;height:100%;object-fit:cover">
-          -->
-          <div class="team-avatar">K</div>
-        </div>
-        <div class="team-info">
-          <div class="team-name">Khadija Khaouti</div>
-          <div class="team-title">Kinésithérapeute D.E. — Fondatrice</div>
-          <div class="team-tags">
-            <span class="team-tag">Sportive</span>
-            <span class="team-tag">Post-opératoire</span>
-            <span class="team-tag">Générale</span>
-          </div>
-        </div>
-      </div>
-      <div class="team-card fade-up d2">
-        <div class="team-photo" style="background:linear-gradient(135deg,#1d3d3a,#1a4d45);">
-          <div class="team-avatar" style="background:var(--orange);">+</div>
-        </div>
-        <div class="team-info">
-          <div class="team-name">Poste à pourvoir</div>
-          <div class="team-title">Kinésithérapeute spécialisé(e)</div>
-          <div class="team-tags">
-            <span class="team-tag" style="background:#fff0ec;color:#b85730;">Rejoignez-nous</span>
-          </div>
-        </div>
-      </div>
-      <div class="team-card fade-up d3">
-        <div class="team-photo" style="background:linear-gradient(135deg,#162e2c,#0d2320);">
-          <div class="team-avatar" style="background:#5b6360;">+</div>
-        </div>
-        <div class="team-info">
-          <div class="team-name">Poste à pourvoir</div>
-          <div class="team-title">Kinésithérapeute spécialisé(e)</div>
-          <div class="team-tags">
-            <span class="team-tag" style="background:#f2f2f2;color:#5b6360;">Rejoignez-nous</span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -572,6 +526,7 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
       <div style="margin-top:26px;display:flex;gap:11px;flex-wrap:wrap;">
         <a href="tel:+212537614765" class="btn btn-teal"><i data-lucide="phone"></i> Appeler</a>
         <a href="mailto:centrekhaouti@gmail.com" class="btn btn-outline-teal"><i data-lucide="mail"></i> Email</a>
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination=33.9227,-6.9148" target="_blank" rel="noopener" class="btn btn-outline-teal"><i data-lucide="navigation"></i> Itinéraire</a>
       </div>
     </div>
     <!-- Leaflet map — UPDATE coordinates below -->
@@ -612,52 +567,38 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
 
         <div class="divider-line"></div>
 
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#fff;margin-bottom:8px;"><i data-lucide="calendar" style="width:15px;height:15px;"></i> Agenda en ligne (Cal.com)</div>
-        <div class="rdv-card-desc" style="margin-bottom:14px;">Choisissez vous-même votre créneau — confirmation immédiate.</div>
-        <!-- UPDATE: replace VOTRE_NOM with your cal.com username -->
-        <a href="https://cal.com/VOTRE_NOM/consultation" target="_blank"
-           class="btn btn-teal" style="justify-content:center;">
-          Choisir un créneau →
-        </a>
-
-        <div class="rdv-note" style="margin-top:16px;display:flex;align-items:center;gap:6px;">
-          <i data-lucide="clock" style="width:13px;height:13px;"></i> Lun–Ven 08:00–19:00 · Sam 09:00–13:00
+        <div class="rdv-note" style="display:flex;align-items:center;gap:6px;">
+          <i data-lucide="clock" style="width:13px;height:13px;"></i> Lun–Jeu 08:00–19:00 · Ven 08:00–18:00 · Sam 09:00–13:00
         </div>
       </div>
 
-      <!-- SECONDARY: FORM -->
-      <div class="rdv-card">
+      <!-- RÉSERVATION EN LIGNE (assets/js/booking.js) -->
+      <div class="rdv-card" id="booking">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
-          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i data-lucide="clipboard-list" style="width:20px;height:20px;color:#fff;"></i></div>
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i data-lucide="calendar-check" style="width:20px;height:20px;color:#fff;"></i></div>
           <div>
-            <div class="rdv-card-title" style="margin-bottom:2px;">Formulaire de demande</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.45);">Réponse sous 2h en journée</div>
+            <div class="rdv-card-title" style="margin-bottom:2px;">Réserver en ligne</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.45);">Choisissez votre créneau — confirmation par téléphone</div>
           </div>
         </div>
-        <div class="rdv-card-desc">Remplissez ce formulaire et nous vous recontactons pour confirmer votre créneau.</div>
-        <!-- UPDATE: replace YOUR_FORM_ID → créez un compte sur formspree.io -->
-        <form class="rdv-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-          <div class="form-row">
-            <input type="text" name="nom" placeholder="Nom complet" required>
-            <input type="tel" name="telephone" placeholder="Téléphone" required>
-          </div>
-          <input type="email" name="email" placeholder="Adresse email" required>
-          <select name="service" required>
-            <option value="" disabled selected>Choisir un service</option>
-            <option>Kinésithérapie générale</option>
-            <option>Kinésithérapie sportive</option>
-            <option>Post-opératoire</option>
-            <option>Kinésithérapie pédiatrique</option>
-            <option>Électrothérapie</option>
-            <option>Massage thérapeutique</option>
-            <option>Rééducation neurologique</option>
-            <option>Drainage lymphatique</option>
-            <option>Autre</option>
+        <form class="rdv-form" novalidate>
+          <select name="service">
+            <option value="">Prestation (optionnel)</option>
           </select>
-          <input type="text" name="disponibilite" placeholder="Disponibilités souhaitées (ex : Mardi matin)">
-          <textarea name="message" placeholder="Informations complémentaires (optionnel)"></textarea>
-          <input type="text" name="_gotcha" style="display:none">
-          <button type="submit" class="btn btn-teal" style="width:100%;justify-content:center;padding:15px;">Envoyer ma demande →</button>
+          <label class="bk-label">Date souhaitée
+            <input type="date" name="date" required>
+          </label>
+          <div class="bk-slots"><span class="bk-hint">Choisissez une date pour voir les créneaux libres.</span></div>
+          <input type="hidden" name="time">
+          <div class="form-row">
+            <input type="text" name="nom" placeholder="Nom complet" required maxlength="120" autocomplete="name">
+            <input type="tel" name="telephone" placeholder="Téléphone" required maxlength="20" autocomplete="tel">
+          </div>
+          <input type="email" name="email" placeholder="Adresse email (optionnel)" maxlength="200" autocomplete="email">
+          <textarea name="message" placeholder="Motif / informations complémentaires (optionnel)" maxlength="1000"></textarea>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none">
+          <button type="submit" class="btn btn-teal" style="width:100%;justify-content:center;padding:15px;">Demander ce rendez-vous →</button>
+          <p class="bk-msg" role="status"></p>
         </form>
       </div>
     </div>
@@ -680,7 +621,7 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
             <div class="footer-brand-sub">Kinésithérapie &amp; Physiothérapie</div>
           </div>
         </div>
-        <p class="footer-brand-desc">Votre centre de kinésithérapie et physiothérapie à Bruxelles. Des soins de qualité, une équipe à votre écoute, des résultats durables.</p>
+        <p class="footer-brand-desc">Votre centre de kinésithérapie et physiothérapie à Temara. Des soins de qualité, une équipe à votre écoute, des résultats durables.</p>
       </div>
       <div>
         <div class="footer-col-title">Navigation</div>
@@ -688,7 +629,6 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
           <li><a href="#accueil">Accueil</a></li>
           <li><a href="#a-propos">À propos</a></li>
           <li><a href="#services">Services</a></li>
-          <li><a href="#equipe">Équipe</a></li>
           <li><a href="#galerie">Galerie</a></li>
           <li><a href="#rendez-vous">Prendre RDV</a></li>
         </ul>
@@ -729,6 +669,8 @@ footer{background:var(--night2);color:rgba(255,255,255,.55);padding:60px 48px 24
 </button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/booking.js" defer></script>
 <script>
 /* ── NAV scroll ── */
 const nav = document.getElementById('nav');
@@ -797,32 +739,6 @@ L.marker([LAT, LNG], {icon:pin}).addTo(map)
   </div>`, {maxWidth:240})
   .openPopup();
 
-/* ── Formspree async submit ── */
-const form = document.querySelector('.rdv-form');
-if (form) {
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const btn = form.querySelector('button[type="submit"]');
-    const orig = btn.innerHTML;
-    btn.innerHTML = 'Envoi en cours…'; btn.disabled = true;
-    try {
-      const res = await fetch(form.action, {
-        method:'POST', body:new FormData(form), headers:{'Accept':'application/json'}
-      });
-      if (res.ok) {
-        btn.innerHTML = '✓ Message envoyé ! Nous vous contactons bientôt.';
-        btn.style.background = 'var(--teal-d)'; form.reset();
-      } else throw new Error();
-    } catch {
-      btn.innerHTML = '✗ Erreur — Appelez-nous directement.';
-      btn.style.background = 'var(--orange)'; btn.disabled = false;
-      setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.disabled = false; }, 5000);
-    }
-  });
-}
-
-/* ── Init Lucide icons ── */
-lucide.createIcons();
 </script>
 </body>
 </html>

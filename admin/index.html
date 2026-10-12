@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Espace admin — Centre Khaouti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/fr.global.min.js"></script>
+<script src="../assets/js/config.js"></script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+
+<!-- Connexion -->
+<section id="login" class="login" hidden>
+  <form class="login-card">
+    <div class="brand">
+      <svg width="34" height="38" viewBox="0 0 222.44 252.01"><path fill="#f2794f" d="M161.33,22.39c8.25,37.79-46.58,50.81-56.21,13.35-8.25-37.79,46.58-50.81,56.21-13.35Z"/><path fill="#0fa99b" d="M25.12,18.89C9.98,21.13-3.01,41.59.61,57.74c3.1,13.84,17.16,19.05,33.16,30.08,54.82,37.78,76.98,105.59,87.94,139.12,3.39,10.37,7.62,25.39,10.09,25.07C143.5,179.9,80.83,23.57,25.12,18.89Z"/><path fill="#1d3331" d="M207.27,58.13c9.14,1.81,16.98,18.3,14.8,31.31-1.87,11.15-10.36,15.36-20.02,24.24-33.09,30.45-46.48,85.09-53.1,112.12-2.05,8.36-4.6,20.47-6.09,20.2-6.8-53.16,27.94-181.63,64.41-187.88Z"/></svg>
+      <div><b>CENTRE KHAOUTI</b><small>Espace administration</small></div>
+    </div>
+    <label class="field"><span>Email</span><input type="email" name="email" required autocomplete="username"></label>
+    <label class="field"><span>Mot de passe</span><input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn primary block" type="submit">Se connecter</button>
+    <p class="login-msg"></p>
+    <a href="../" class="muted small">← Retour au site</a>
+  </form>
+</section>
+
+<!-- Application -->
+<div id="app" class="app" hidden>
+  <aside class="side">
+    <div class="brand">
+      <svg width="26" height="30" viewBox="0 0 222.44 252.01"><path fill="#f2794f" d="M161.33,22.39c8.25,37.79-46.58,50.81-56.21,13.35-8.25-37.79,46.58-50.81,56.21-13.35Z"/><path fill="#0fa99b" d="M25.12,18.89C9.98,21.13-3.01,41.59.61,57.74c3.1,13.84,17.16,19.05,33.16,30.08,54.82,37.78,76.98,105.59,87.94,139.12,3.39,10.37,7.62,25.39,10.09,25.07C143.5,179.9,80.83,23.57,25.12,18.89Z"/><path fill="#fff" d="M207.27,58.13c9.14,1.81,16.98,18.3,14.8,31.31-1.87,11.15-10.36,15.36-20.02,24.24-33.09,30.45-46.48,85.09-53.1,112.12-2.05,8.36-4.6,20.47-6.09,20.2-6.8-53.16,27.94-181.63,64.41-187.88Z"/></svg>
+      <div><b>CENTRE KHAOUTI</b><small>Administration</small></div>
+    </div>
+    <nav class="menu">
+      <a href="#/">Tableau de bord</a>
+      <a href="#/agenda">Agenda</a>
+      <a href="#/rendez-vous">Rendez-vous <span class="count" id="pending-count" hidden></span></a>
+      <a href="#/patients">Patients</a>
+      <a href="#/devis">Devis</a>
+      <a href="#/paiements">Encaissements</a>
+      <a href="#/charges">Charges &amp; factures</a>
+      <a href="#/parametres">Paramètres</a>
+    </nav>
+    <div class="side-foot">
+      <span id="who" class="small"></span>
+      <button class="btn ghost sm" id="logout">Déconnexion</button>
+      <a href="../" target="_blank" class="small">Voir le site ↗</a>
+    </div>
+  </aside>
+  <button class="menu-toggle" id="menu-toggle" aria-label="Menu">☰</button>
+  <main id="view" class="view"></main>
+</div>
+
+<div id="boot" class="boot">Chargement…</div>
+</body>
+</html>
